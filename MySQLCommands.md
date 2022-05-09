@@ -631,3 +631,36 @@ REVOKE 权限列表 ON 数据库名.表名 FROM 'username'@'hostname';
 
 ### 3. 函数
 
+#### 3.1 字符串函数
+
+```sql
+-- 字符串拼接 将S1,S2,...,Sn 拼接成一个字符串
+CONCAT(S1, S2,..., Sn)
+
+-- 字符串转大写
+LOWER(str)
+
+-- 字符串转小写
+UPPER(str)
+
+-- 左填充，用字符串 pad 对 str 左边进行填充，达到 n 个字符串长度
+LPAD(str, n, pad)
+
+-- 右填充，用字符串 pad 对 str 右边进行填充，达到 n 个字符串长度
+RPAD(str, n, pad)
+
+-- 去掉字符串首尾空格
+TRIM(str)
+
+-- 返回 str 从 start 位置起 len 个长度的字符串
+SUBSTRING(str, start, len)
+```
+
+
+
+#### 3.2 数值函数
+
+#### 3.3
+
+#### 3.4
+
