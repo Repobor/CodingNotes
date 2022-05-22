@@ -20,7 +20,7 @@
 
 #### 2.1 信道带宽
 
-- 模拟信道 ：$ W = f2 - f1$（f2、f1 代表最高、最低频率，单位 Hz）
+- 模拟信道 ：$W = f2 - f1$（f2、f1 代表最高、最低频率，单位 Hz）
 - 数字信道 （离散信道）：带宽为信道能够达到的最大数据传输速率， 单位 bit/s
 
 - 数据传输速率 ：每秒钟能够传输的二进制数据位数，单位 比特/秒（bit/s, b/s 或 bps）
@@ -35,18 +35,18 @@
 
 - 码元速率：单位时间内信道传送的码元个数，如果T代表码元宽度（脉冲周期）
 
-  则 码元速率（波特率）：$ B = 1 / T$ ， 单位：波特 Baud
+  则 码元速率（波特率）：$B = 1 / T$ ， 单位：波特 Baud
 
-  - 一个码元携带信息量 n 位 与 码元种类 N 的关系 $ n = \log_2N$ 
+  - 一个码元携带信息量 n 位 与 码元种类 N 的关系 $n = \log_2N$ 
 
 - 尼奎斯特定理：在一个理想（没有噪声环境）的信道中，若信道带宽为W，
 
-  - 最大码元速率为 $ B = 2W$  -> 最大码元速率 = 2倍的信道带宽
+  - 最大码元速率为 $B = 2W$  -> 最大码元速率 = 2倍的信道带宽
   - 最大数据速率为 $R = B \log_2N = 2W \log_2N$ -> 极限数据速率 = 最大码元速率 * 码元种类
 
 - 香农定理：在噪声信道的极限速率和带宽之间的关系
 
-  - 极限信息传输速率公式：$ C = W \log_2 (1 + \frac{S}{N}) \enspace (bit/s)$  
+  - 极限信息传输速率公式：$C = W \log_2 (1 + \frac{S}{N}) \enspace (bit/s)$
 
     信噪比：$\frac{S}{N}$
 
@@ -72,7 +72,7 @@
 6. ==发送数据时间 = 线路延迟 +  调制延迟==
 7. 线路延迟 = 传输距离 / 传输速度 （路上跑的时间）
 8. 调制延迟 = 数据帧大小 / 速率 （排队上车的时间）
-9. $ 1s = 10^3 ms = 10^6 us$
+9. $1s = 10^3 ms = 10^6 us$
 
 #### 2.5 传输介质
 
@@ -201,7 +201,7 @@
 
 采样：按照一定的时间间隔对模拟信号进行取样，把模拟信号的当前值作为样本
 
-- 奈奎斯特采样定理：如果模拟信号的最高频率为 $f_{max}$, 若以大于 $2f_{max}$的采样频率对其进行采样，则采样得到的离散信号序列就能完整地恢复出原始信号。		  $ f = \frac{1}{t} \geq 2f_{max}$
+- 奈奎斯特采样定理：如果模拟信号的最高频率为 $f_{max}$, 若以大于 $2f_{max}$的采样频率对其进行采样，则采样得到的离散信号序列就能完整地恢复出原始信号。		  $f = \frac{1}{t} \geq 2f_{max}$
 
 量化：把取样后得到的样本由连续值转换为离散值，离散的个数决定了量化的精度
 
@@ -301,7 +301,7 @@
   所以，当其中 1 位出错时便能检测出来，两位出错无能为力
 
 - **海明码原理**：在数据中间加入几个校验码，码距均匀拉大，当某一位出错，会引起几个校验位的值发生变化
-- **海明不等式**：校验码个数为 k，可以表示 $2^k$ 个信息，1 个信息用来表示"没有错误"，其余 $ 2^k - 1$ 个表示数据中存在错误，如果满足 $2^k - 1 \geq m + k$ ( m + k 为编码后的数的总长度)，则在理论上 k 个校验码就可以判断是哪一位（包括信息码和校验码）出现了问题
+- **海明不等式**：校验码个数为 k，可以表示 $2^k$ 个信息，1 个信息用来表示"没有错误"，其余 $2^k - 1$ 个表示数据中存在错误，如果满足 $2^k - 1 \geq m + k$ ( m + k 为编码后的数的总长度)，则在理论上 k 个校验码就可以判断是哪一位（包括信息码和校验码）出现了问题
 
 ![image-20220513233220416](NetworkEngineerSummer.assets/image-20220513233220416.png)
 
@@ -322,7 +322,7 @@
 #### 2.12 总结
 
 - 奈奎斯特定理：$R = B \log_2N = 2W \log_2N$ N取决于调制技术
-- 香农定理：$ C = W \log_2 (1 + \frac{S}{N}) \enspace (bit/s)$
+- 香农定理：$C = W \log_2 (1 + \frac{S}{N}) \enspace (bit/s)$
 - 信道延迟：发送数据时间 = 线路延迟 +  调制延迟
   - 线路延迟 = 传输距离 / 传输速度 （路上跑的时间）
   - 调制延迟 = 数据帧大小 / 速率 （排队上车的时间）
@@ -393,7 +393,7 @@
 
 - 工作原理∶发送站发一帧，收到应答信号后再发送下一帧，接收站每收到一帧后回送一个应答信号（ACK)，表示愿意接收下一帧，如果接收站不应答，发送站必须等待。
 
-- ==$ TFA=2t_p+t_f$==  tp 路上传送时间(路上跑的时间)， tf 发送时间(排队上车的时间)
+- ==$TFA=2t_p+t_f$==  tp 路上传送时间(路上跑的时间)， tf 发送时间(排队上车的时间)
 
 ![image-20220517165901454](NetworkEngineerSummer.assets/image-20220517165901454.png)
 
@@ -978,17 +978,330 @@ MAC地址第八位是 0
 
 #### 6.14 IP 地址
 
-##### 6.14.1 IP 地址类别
+##### 6.14.1 什么是 IP 地址
+
+1. 在 IP 网络中，通信节点需要有一个唯一的 IP 地址
+2. IP 地址 用于 IP 报文的寻址以及标识一个节点
+3. IPv4 地址一共 32 bits，使用点分十进制形式标识；
+
+![image-20220520163500280](NetworkEngineerSummer.assets/image-20220520163500280.png)
+
+| 十进制 | 192.     | 168.     | 10.      | 1        |
+| ------ | -------- | -------- | -------- | -------- |
+| 二进制 | 11000000 | 10101000 | 00001010 | 00000001 |
+
+
+
+##### 6.14.2 IP 地址类别
+
+![image-20220520162100349](NetworkEngineerSummer.assets/image-20220520162100349.png)
+
+##### 6.14.3 网络掩码
+
+- 网络掩码与IP地址搭配使用，用于描述一个IP地址中的网络部分及主机部分。
+- 网络掩码 32 bits，与 32 bits的IP地址一一对应，掩码中为 1 的位对应IP地址中的网络位，掩码中为 0 的位对应IP地址中的主机位。
+
+![image-20220520163704459](NetworkEngineerSummer.assets/image-20220520163704459.png)
+
+
+
+默认网络掩码：
+
+- A 类：255.0.0.0
+- B 类：255.255.0.0
+- C 类：255.255.255.0
+
+##### 6.14.4 IP 网络通信类型
+
+1. 单播 Unicast
+2. 广播 Broadcast
+3. 组播 Multicast
+
+##### 6.14.5 IP 地址类型
+
+- 网络地址∶指代网络的地址。在网络的IPv4地址范围内，最小地址保留为网络地址。此地址的主机部分的每个主机位均为 0。
+- 广播地址∶用于向网络中的所有主机发送数据的特殊地址。广播地址使用该网络范围内的最大地址。即主机部分的各比特位全部为 1 的地址。
+- 主机地址:可分配给网络中终端设备的地址。
+
+![image-20220520163958720](NetworkEngineerSummer.assets/image-20220520163958720.png)
 
   #### 6.15 VLSM 划分子网
 
-#### 6.16 CIDR 无类域路由
+> 标准 ABC 类网络问题： IP 地址空间极大浪费；一个广播域中 PC 数量过于庞大，网络可能被广播报文消耗大量资源。
 
-#### 6.17 ICMP 协议
+![image-20220520164141877](NetworkEngineerSummer.assets/image-20220520164141877.png)
 
-#### 6.18 ARP 协议
+子网数量：$2^m$ 向主机位借位后产生的子网个数，m 位 所借的位数
+
+每个子网主机数量：$2^n-2$ 向主机位借位后的每个子网中可用 IP 数，n 为原主机位剔除被借位后的剩余位数；-2的原因：每个子网的网络号和广播号不可用
+
+#### 6.16 公有IP、私有 IP
+
+IPv4 地址空间中有一部分特殊的地址，成为私有 IP 地址，私有IP地址不能直接访可公网( lnternet )的IP，只能在本地使用。
+
+| 私有IP地址空间 | 地址范围                            |
+| -------------- | ----------------------------------- |
+| 10.0.0.0/8     | 10.0.0.0 到 10.255.255.255 A1       |
+| 172.16.0.0/12  | 172.16.0.0 到 172.16.255.255 B16    |
+| 192.168.0.0/16 | 192.168.0.0 到 192.168.255.255 C256 |
+
+#### 6.17 CIDR 无类域路由
+
+CIDR : 无类域间路由，超网 Classless Inter-Domain Routing
+
+工作原理（路由聚合）：
+
+![image-20220520164931549](NetworkEngineerSummer.assets/image-20220520164931549.png)
+
+![image-20220520164955948](NetworkEngineerSummer.assets/image-20220520164955948.png)
+
+做法：转换成二进制，写出==相同的掩码位数==，聚合后的 IP 则是首个 IP 
+
+![image-20220520165119679](NetworkEngineerSummer.assets/image-20220520165119679.png)
+
+优点：
+
+1. 减小骨干路由器表项压力
+2. 缓解 IP 地址 耗尽
+
+![image-20220520165222672](NetworkEngineerSummer.assets/image-20220520165222672.png)
+
+#### 6.18 ICMP 协议
+
+> Internet控制消息协议ICMP (Internet Control Message Protocol）是网络层的一个重要协议。ICMP协议用来在网络设备间传递各种差错和控制信息，并对于收集各种网络信息、诊断和排除各种网络故障等方面起着至关重要的作用。
+
+![image-20220520165325982](NetworkEngineerSummer.assets/image-20220520165325982.png)
+
+- ICMP 用来传递差错、控制、查询等信息
+
+##### 6.18.1 ICMP 重定向
+
+![image-20220520165540867](NetworkEngineerSummer.assets/image-20220520165540867.png)
+
+1. 主机A希望发送报文到服务器A，于是根据配置的默认网关地址向网关RTB 发送报文。
+
+2. 网关RTB 收到报文后，检查报文信息，发现报文应该转发到与源主机在同一网段的另一个网关设备RTA，因为此转发路径是更优的路径。
+3. RTB 会向主机发送一个 Redirect 消息，通知主机直接向另一个网关 RTA 发送该报文。
+4. 主机收到 Redirect 消息后，会向RTA发送报文，然后RTA会将该报文再转发给服务器A。
+
+##### 6.18.2 ICMP 差错检测
+
+![image-20220520165712396](NetworkEngineerSummer.assets/image-20220520165712396.png)
+
+ICMP Echo 消息常用于诊断源和目的地之间的网络连通性，同时还可以提供其他信息，如报文往返时间等。
+
+##### 6.18.3 ICMP 错误报告
+
+![image-20220520165822825](NetworkEngineerSummer.assets/image-20220520165822825.png)
+
+##### 6.18.4 ICMP 数据包格式
+
+![image-20220520165846751](NetworkEngineerSummer.assets/image-20220520165846751.png)
+
+##### 6.18.5 ICMP 消息类型和编码类型
+
+![image-20220520165912303](NetworkEngineerSummer.assets/image-20220520165912303.png)
+
+##### 6.18.6 ICMP 典型应用
+
+1. Ping
+2. tracert
+
+##### 6.18.7 ICMP 小结
+
+1. Ping 使用的是哪两类 ICMP 消息？
+
+​	Ping利用ICMP Echo请求消息(Type值为8 ）来发起检测目的可达性。目的端收到ICMP Echo请求消息后，根据IP报文头中的源地址向源端发送ICMP Echo回复消息（Type值为0)。
+
+2. 当网络设备收到 TTL 值 为 0 的 IP 报文时，会如何操作
+
+​	如果IP数据包在到达目的地之前TTL值已经降为0，则收到IP数据包的网络设备会丢弃该数据包，并向源端发送ICMP消息通知源端TTL超时。
+
+#### 6.19 ARP 协议
 
 ![image-20220518223846757](NetworkEngineerSummer.assets/image-20220518223846757.png)
 
-#### 6.19 传输层协议 TCP、UDP
+ARP 老化时间：因系统而异
+
+##### 6.19.1 代理 ARP
+
+![image-20220520170452915](NetworkEngineerSummer.assets/image-20220520170452915.png)
+
+位于不同网络的网络设备在不配置网关的情况下，可以通过 ARP 代理实现相互通信
+
+##### 6.19.2 免费 ARP
+
+![image-20220520170534778](NetworkEngineerSummer.assets/image-20220520170534778.png)
+
+免费ARP 用于探测 IP 地址是否冲突
+
+##### 6.19.3 小结
+
+1. 网络设备在什么情况下会发送 ARP Request?
+
+​		源设备在发送数据给目的设备前，会首先查看自身的ARP缓存，查找ARP缓存中是否存在目的设备的IP地址和MAC地址的映射。如果存在则直接使用，如果不存在则会发送ARP Request。
+
+2. 网络设备在什么时候会产生免费 ARP
+
+​		当网络上的一个设备被分配了IP地址或者IP地址发生变更后，可以通过免费ARP来检查IP地址是否冲突。
+
+#### 6.20 传输层协议 TCP、UDP
+
+- TCP（传输控制协议）属于可靠面向连接的网络协议
+- UDP（用户数据报协议）属于不可靠面向无连接的网络协议
+
+##### 6.20.1 TCP 报文格式
+
+![image-20220520172818282](NetworkEngineerSummer.assets/image-20220520172818282.png)
+
+##### 6.20.2 UDP 报文格式
+
+![image-20220520172910824](NetworkEngineerSummer.assets/image-20220520172910824.png)
+
+- 与 TCP 相比，做了很大精简，省略诸多控制字段
+
+##### 6.20.3 TCP/UDP 端口号
+
+![image-20220520173036584](NetworkEngineerSummer.assets/image-20220520173036584.png)
+
+- 源端口随机分配，目标端口使用知名端口
+- 应用客户端使用的源端口一般为系统中未使用的且大于 1024
+- 目的端口号为服务器端应用服务器的进程，如 telnet:23
+
+##### 6.20.4 TCP 序列号及确认号
+
+![image-20220520173225286](NetworkEngineerSummer.assets/image-20220520173225286.png)
+
+##### 6.20.5 TCP 三次握手建立连接
+
+![image-20220520173510401](NetworkEngineerSummer.assets/image-20220520173510401.png)
+
+##### 6.20.6 TCP 四次握手断开连接
+
+![image-20220520173542916](NetworkEngineerSummer.assets/image-20220520173542916.png)
+
+##### 6.20.7 TCP 窗口机制
+
+![image-20220520173605702](NetworkEngineerSummer.assets/image-20220520173605702.png)
+
+#### 6.21 数据封装与转发全过程（略）
+
+#### 6.21 华为命令行
+
+##### 6.21.1 基本命令结构
+
+- 每条命令都有独特的格式或语法结构，并在相应的试图下配置
+- 常规命令语法为 关键字 + 参数
+
+![image-20220519233736081](NetworkEngineerSummer.assets/image-20220519233736081.png)
+
+##### 6.21.2 命令视图
+
+![image-20220519233822880](NetworkEngineerSummer.assets/image-20220519233822880.png)
+
+##### 6.21.3 命令等级
+
+| 用户等级 |  名称  |                     操作                     |
+| :------: | :----: | :------------------------------------------: |
+|    0     | 访问级 | 诊断/查看（ping、tracert、telnet、display）  |
+|    1     | 监控级 |             display 内容稍微丰富             |
+|    2     | 配置级 |    网络服务，包括路由，各个网络层次的命令    |
+|  3 - 15  | 管理级 | 系统管理层面（升级系统/上传下载文件，debug） |
+
+
+
+
+
+```bash
+<Huawei> system-view # 进入系统视图
+[Huawei] sysname Demo # 配置设备名称
+[Demo] header login information "Welcome to Huawei" # 设置用户登录前显示的标题信息
+[Demo] header shell information "Welcome to Huawei" # 设置用户登录后显示的标题信息
+[Demo] command-privilege level 3 view user save # 修改命令级别，只有 3 级的用户才能执行 save 命令
+<Demo> clock timezone BJ add 08:00:00 # 设置所在时区
+<Demo> clock datatime hh:mm:ss year-mm-dd # 设置当前时间
+<Demo> display clock # 显示当前时间
+<Demo> display current-configuration # 显示当前配置
+<Demo> save # 将当前配置保存到目录下 "vrpcfg.zip"
+<Demo> startup saved-configuration vrpcfg.zip # 下次启动时加载 "vrpcfg.zip"
+Info: Succeeded in setting the file for booting system
+<Demo> reset saved-configuration # 删除启动配置文件（也可以直接delete）
+Clear the configuration in the device successfully.
+<Demo> compare configuration [filename] # 比较当前配置与保存的配置
+
+[Huawei] aaa
+[00]
+```
+
+
+
+```bash
+<Huawei>sy
+Enter system view, return user view with Ctrl+Z.
+[Huawei]sysname R1
+[R1]interface g0/0/0
+[R1-GigabitEthernet0/0/0]display int brief
+PHY: Physical
+*down: administratively down
+(l): loopback
+(s): spoofing
+(b): BFD down
+^down: standby
+(e): ETHOAM down
+(d): Dampening Suppressed
+InUti/OutUti: input utility/output utility
+Interface                   PHY   Protocol InUti OutUti   inErrors  outErrors
+Ethernet0/0/0               down  down        0%     0%          0          0
+Ethernet0/0/1               down  down        0%     0%          0          0
+Ethernet0/0/2               down  down        0%     0%          0          0
+Ethernet0/0/3               down  down        0%     0%          0          0
+Ethernet0/0/4               down  down        0%     0%          0          0
+Ethernet0/0/5               down  down        0%     0%          0          0
+Ethernet0/0/6               down  down        0%     0%          0          0
+Ethernet0/0/7               down  down        0%     0%          0          0
+GigabitEthernet0/0/0        up    down        0%     0%          0          0
+GigabitEthernet0/0/1        down  down        0%     0%          0          0
+NULL0                       up    up(s)       0%     0%          0          0
+[R1-GigabitEthernet0/0/0]ip add 12.1.1.1 24
+May 20 2022 17:41:58-08:00 R1 %%01IFNET/4/LINK_STATE(l)[0]:The line protocol IP 
+on the interface GigabitEthernet0/0/0 has entered the UP state. 
+[R1] aaa
+[R1-aaa]local-user admin123 privilege level 0 password cipher admin123
+Info: Add a new user.
+[R1-aaa]local-user admin123 service-type telnet
+[R1-aaa]q
+[R1]user-int vty 0 4
+[R1-ui-vty0-4]authentication-mode aaa
+[R1-ui-vty0-4]q
+[R1]q
+<R1>telnet 12.1.1.2
+  Press CTRL_] to quit telnet mode
+  Trying 12.1.1.2 ...
+  Error: Can't connect to the remote host
+<R1>telnet 12.1.1.1
+  Press CTRL_] to quit telnet mode
+  Trying 12.1.1.1 ...
+  Connected to 12.1.1.1 ...
+
+Login authentication
+
+
+Username:admin123
+Password:
+<R1>
+```
+
+
+
+
+
+#### 6.22 距离矢量协议
+
+![image-20220522152953328](NetworkEngineerSummer.assets/image-20220522152953328.png)
+
+
+
+#### 6.23 链路状态路由协议
+
+#### 6.24 OSPF
 
