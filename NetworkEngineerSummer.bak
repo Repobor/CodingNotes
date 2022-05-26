@@ -1291,582 +1291,162 @@ Password:
 <R1>
 ```
 
+#### 6.22 IP 路由基础
 
-#### 6.22 动态路由协议分类
+##### 6.22.1 什么是路由
+
+当路由器（或其他三层设备）收到一个IP数据包时，会查看数据包的IP头部中的**目的IP地址**，并在路由表中进行查找，在匹配到**最优的路由**后，将数据包扔给该路由所指出接口或者下一跳。
+
+![image-20220526180605238](NetworkEngineerSummer.assets/image-20220526180605238.png)
+
+##### 6.22.2 路由器的工作内容
+
+- 建立并维护路由表RIB（静态路由/路由协议）
+- 根据路由表==转发数据==
+
+##### 6.22.3 IP 路由表
+
+- 初始情况下，路由器所知的网络，只有其直连接口所在网络
+- 直连网络在路由表中的标记为Direct
+- 直连网络出现在路由表中的前提，是该网络的接口物理机协议状态都 UP
+
+![image-20220526180759664](NetworkEngineerSummer.assets/image-20220526180759664.png)
+
+
+
+温馨提示：接口UP，协议DOWN可能原因：
+
+1. IP地址冲突，子网掩码设置错误
+2. 没有设置DCE时钟
+3. 没有设置对FR/PPP的封装
+4. Hello和Dead的更新时钟，两端路由器不同
+
+##### 6.22.4 查看路由表
+
+`dis ip routing-table`
+
+![image-20220526180847699](NetworkEngineerSummer.assets/image-20220526180847699.png)
+
+##### 6.22.5 路由条目来源
+
+- 直连路由-路由器本地接口所在网段
+- 静态路由-手工配置的路由条目
+- 动态路由-路由器之间通过动态路由协议学习到的路由
+
+![image-20220526181046524](NetworkEngineerSummer.assets/image-20220526181046524.png)
+
+##### 6.22.6 什么是静态路由
+
+![image-20220526181159144](NetworkEngineerSummer.assets/image-20220526181159144.png)
+
+![image-20220526181211485](NetworkEngineerSummer.assets/image-20220526181211485.png)
+
+##### 6.22.7 静态路由特点
+
+1. 配置简单
+2. 手工配置，可控性高
+3. 节省网络带宽
+4. 网络大，工作量大。  
+5. 网络故障，无法响应拓扑动态变化。
+
+##### 6.22.8 静态路由配置
+
+- **静态路由的配置（关联下一跳IP的方式)**
+  `[Router] ip route-static 网络号 掩码 下一跳 IP地址`
+
+- 静态路由的配置（关联出接口的方式)
+  `[Router] ip route-static 网络号 掩码 出接口`
+
+- 静态路由的配置（关联出接口和下一跳IP的方式)
+
+  `[Router] ip route-static 网络号 掩码 出接口 下一跳 IP地址`
+
+- 配置示例:
+  ```
+  [R1] ip route-static 192.168.100.0 255.255.255.0 192.168.12.2
+  [R1] ip route-static 192.168.100.0 24 192.168.12.2
+
+
+
+![image-20220526181746466](NetworkEngineerSummer.assets/image-20220526181746466.png)
+
+注意∶
+
+- 通信是双向的，因此要留意往返流量（的路由）
+- 路由行为是逐跳的，因此需要保证沿途每一台路由器都有路由
+
+##### 6.22.9 默认路由
+
+![image-20220526181905666](NetworkEngineerSummer.assets/image-20220526181905666.png)
+
+![image-20220526181914238](NetworkEngineerSummer.assets/image-20220526181914238.png)
+
+- 默认路由是一种特殊的静态路由，走投无路的选择
+- 配置简单，简化管理
+- 降低路由CPU、内存资源
+- 用处：网络出口路由器/防火墙/核心交换机
+
+##### 6.22.4 查看与排错
+
+- `ping` 测试网络连通性
+- `tracert` 跟踪到目标网络的每一跳
+- `display ip routing table` 查看路由表
+- `display ip interface brief` 查看接口消息摘要
+
+##### 6.22.5 Loopback 环回接口
+
+- Loopback接口，也叫环回口，是一个逻辑的、虚拟接口
+- 使用全局命令`interface loopback` 加上接口编号创建
+- 创建完成后即可为接口配置IP地址
+
+
+
+- Loopback接口在手工创建后，是不会DOWN掉的，因此非常稳定。
+- Loopback接口常用于：==（网络管理和路由更新)==
+  - 模拟路由器的直连网段，可用于测试
+  - 可用于设备管理（Loopback接口比较稳定）
+  - 协议使用，比如OSPF、BGP、MPLS等的RouterID
+  - 作为SNMP traps消息的源地址
+  - 其他用途（Loopback接口用途十分广泛）
+
+#### 6.24 路由汇总
+
+![image-20220526201948851](NetworkEngineerSummer.assets/image-20220526201948851.png)
+
+![image-20220526201957677](NetworkEngineerSummer.assets/image-20220526201957677.png)
+
+##### 6.24.1 可能带来的问题
+
+![image-20220526202029427](NetworkEngineerSummer.assets/image-20220526202029427.png)
+
+##### 6.24.2 汇总路由精确计算
+
+![image-20220526202055775](NetworkEngineerSummer.assets/image-20220526202055775.png)
+
+![image-20220526202107110](NetworkEngineerSummer.assets/image-20220526202107110.png)
+
+
+
+- 路由汇总是一个非常重要的网络设计思想，一个可汇总的网络设计方案将使我们的网络更加优化、路由条目更加精简、网络管理更加简单... 在网络设计及部署中应时刻有路由汇总的意识
+- 不仅仅静态路由能够部署路由汇总，动态路由协议也都支持路由汇总功能。
+
+#### 6.25 IP 路由最长匹配原则
+
+
+
+
+
+#### 6.23 动态路由协议分类
 
 #### ![image-20220522152953328](NetworkEngineerSummer.assets/image-20220522152953328.png)
 
+
+
 #### 6.23 链路状态路由协议
-
-使用距离矢量路由协议的路由器并不了解网络的拓扑。该路由器只知道︰
-
-- 自身与目的网络之间的==距离==
-- 应该往哪个==方向==或哪个接口转发数据包
-
-![image-20220526202850190](NetworkEngineerSummer.assets/image-20220526202850190.png)
-
-**特点**：周期性更新（广播）整张路由表
-
-![image-20220526202927634](NetworkEngineerSummer.assets/image-20220526202927634.png)
-
-
-
-##### 6.23.1 信息交换过程
-
-路由器初始启动
-
-- 最初的网络发现：直连路由写入路由表
-
-![image-20220526203019833](NetworkEngineerSummer.assets/image-20220526203019833.png)
-
-- 初次路由信息交换
-
-![image-20220526203041904](NetworkEngineerSummer.assets/image-20220526203041904.png)
-
-- 再次路由信息交换
-
-![image-20220526203119990](NetworkEngineerSummer.assets/image-20220526203119990.png)
-
-
-
-路由器完成收敛的标志
-
-- 所有路由表包含相同网络可达性信息
-- 网络（路由）进入一个稳态
-
-路由器继续交换路由信息
-
-- 当无新路由信息被更新时收敛结束
-- 网络在达到收敛前无法完全正常工作
-
-##### 6.23.2 RIP 路由的度量值
-
-RIP以跳数（Hops）作为度量值，虽然简单，但事实上不科学，如下图：
-
-![image-20220526203349491](NetworkEngineerSummer.assets/image-20220526203349491.png)
-
-![image-20220526203404676](NetworkEngineerSummer.assets/image-20220526203404676.png)
-
-##### 6.23.3 路由协议优先级
-
-![image-20220526203443323](NetworkEngineerSummer.assets/image-20220526203443323.png)
-
-![image-20220526203450073](NetworkEngineerSummer.assets/image-20220526203450073.png)
-
-
-
-![image-20220526203520984](NetworkEngineerSummer.assets/image-20220526203520984.png)
-
-
-
-##### 6.23.4 路由环路的产生
-
-- 路由器C `10.1.4.0/24` 出现故障
-
-![image-20220526204223215](NetworkEngineerSummer.assets/image-20220526204223215.png)
-
-![image-20220526204354060](NetworkEngineerSummer.assets/image-20220526204354060.png)
-
-
-
-![image-20220526204404870](NetworkEngineerSummer.assets/image-20220526204404870.png)
-
-- RIP 三个计时器：Hello 30s、Dead 180s、垃圾计时器 120s
-
-  180s没有收到更新，标记为无效路由；再过120s没收到更新，删表
-
-- 针对路由环路的理解
-
-##### 6.23.5 防环机制
-
-- 定义最大度量以防止计数至无穷大
-- 水平分割
-  路由中毒
-- 毒性逆转
-- 抑制计时器
-- 触发更新
-
-##### 6.23.6 环路避免
-
-![image-20220526205136332](NetworkEngineerSummer.assets/image-20220526205136332.png)
-
-![image-20220526205314653](NetworkEngineerSummer.assets/image-20220526205314653.png)
-
-![image-20220526205321025](NetworkEngineerSummer.assets/image-20220526205321025.png)
-
-![image-20220526205326754](NetworkEngineerSummer.assets/image-20220526205326754.png)
-
-##### 6.23.7 RIP 协议概述
-
-- RIP（Routing Information Protocols，路由信息协议）应用较早、使用较为普遍的内部网关协议
-- 适用于小型网络，是典型的距离矢量路由协议
-- RIP基于UDP，端口`520`
-- 华为设备上路由优先级为`100`
 
 #### 6.24 OSPF
 
-##### 6.24.1 LSAs 泛洪
-
-![image-20220526205526380](NetworkEngineerSummer.assets/image-20220526205526380.png)
-
-##### 6.24.2 构建 LSDB
-
-![image-20220526205558604](NetworkEngineerSummer.assets/image-20220526205558604.png)
-
-##### 6.24.3 SPF 计算
-
-![image-20220526205624446](NetworkEngineerSummer.assets/image-20220526205624446.png)
-
-##### 6.24.4 维护路由表
-
-![image-20220526205643369](NetworkEngineerSummer.assets/image-20220526205643369.png)
-
-##### 6.24.5 OSPF 简介
-
-- Open Shortest Path First，开放式最短路径优先协议
-- OSPF是一种链路状态路由协议，在RFC 2328中描述
-- Open 意味着公有，任何厂商都能支撑OSPF，目前业内使用最广泛的IGP
-- 在华为设备上，OSPF协议优先级 Internal 10，External 150
-- 路由器之间交互的是链路状态信息，而不是直接交互路由
-- 每台OSPF路由器都知晓网络拓扑结构
-- 采用SPF算法计算达到目的地的最短路径
-- 支持VLSM，支持手工路由汇总
-
-##### 6.24.6 OSPF 基本特点
-
-- 适应范围广：支持各种规模的网络。
-- 快速收敛：在网络的拓扑结构发生变化后立即发送更新报文，使这一变化在自治系统中同步。
-- 无自环：使用SPF最短路径树算法进行路由计算，不会产生环路。
-- 区域划分：允许网络被划分成区域来管理，链路状态数据库仅需和区域内其他路由器保持一致。==减小对路由器内存和CPU的消耗==。同时区域间传送的路由信息减小，==降低网络带宽占用==。
-
-##### 6.24.7 RouterID 
-
-![image-20220526205939041](NetworkEngineerSummer.assets/image-20220526205939041.png)
-
-
-
-- Router Identifier，路由器标示符，用于在一个OSPF域中唯一地标识一台路由器，每台运行OSPF的路由器具备Router-ID。
-- 相同 OSPF 域内，禁止出现两台路由器有相同 RouterID 。
-- OSPF Router-ID 可以通过手工配置的方式，或使用自动获取的方式。自动选取的机制是∶若路由器存在 loopback 接口，则选最大的 loopback 接口IP地址，若无则选活跃的物理接口中IP地址最大的作为 RouterID（实际项目手工配置）。
-- Router-ID 值遵循稳定第一的原则，不会抢占。如果需要更新 RouterID：
-  - 重配地址：`Undo ip address`
-  - 重启进程：`Reset ospf process`
-
-##### 6.24.8 OSPF Cost 
-
-- OSPF使用Cost“开销”作为路由度量值。
-- OSPF接口 cost=100M/接口带宽，其中100M为OSPF参考带宽（reference-bandwidth）,可修改。
-- 每一个激活OSPF的接口都有一个cost值。
-- 一条OSPF路由的cost由该路由从起源一路到达本地的所有==入接口cost值的总和==。
-
-![image-20220526210321031](NetworkEngineerSummer.assets/image-20220526210321031.png)
-
-
-
-![image-20220526210334225](NetworkEngineerSummer.assets/image-20220526210334225.png)
-
-##### 6.24.9 OSPF 三张表
-
-![image-20220526210404868](NetworkEngineerSummer.assets/image-20220526210404868.png)
-
-##### 6.24.10 OSPF 报文类型
-
-- Hello    建立和维护OSPF邻居关系
-- DBD    链路状态数据库描述信息（描述LSDB中的LSA头部信息）
-- LSR     链路状态请求，向OSPF邻居请求链路状态信息
-- LSU     链路状态更新（包含一条或多条LSA）
-- LSAck   多LSU中的LSA进行确认
-
-##### 6.24.11 OSPF 邻居关系建立
-
-![image-20220526210609094](NetworkEngineerSummer.assets/image-20220526210609094.png)
-
-
-
-![image-20220526210628808](NetworkEngineerSummer.assets/image-20220526210628808.png)
-
-![image-20220526210638434](NetworkEngineerSummer.assets/image-20220526210638434.png)
-
-##### 6.24.12 OSPF 网络类型
-
-- OSPF支持的网络类型：
-- 点到点网络
-- 广播型多路访问网络
-- 非广播型多路访问（NBMA）网络
-- P2MP网络
-
-
-
-常用链路层协议对应的默认网络类型：
-
-![image-20220526210824044](NetworkEngineerSummer.assets/image-20220526210824044.png)
-
-##### 6.24.13 DR   BDR
-
-![image-20220526210858685](NetworkEngineerSummer.assets/image-20220526210858685.png)
-
-![image-20220526210912095](NetworkEngineerSummer.assets/image-20220526210912095.png)
-
-- 为减小多路访问网络中的OSPF流量，OSPF会在每一个Ma网络（多路访问网络）选举一个指定路由器（DR）和一个备用指定路由器（BDR）。
-  - DR选举规则：最高OSPF接口优先级拥有者被选做 DR ，如果优先级相等（默认为1），具有最高 OSPF RouterID 的路由器被选举为DR，并且 DR 具有非抢占性。
-- 指定路由器（DR）：负责使用变化新消息更新其他OSPF路由器（DRother）
-- 备用指定路由器（BDR）：监控DR状态，并在当前DR发生故障后接替其角色
-
-
-
-- 注意OSPF为“接口敏感协议”，DR及BDR的身份状态是基于OSPF接口的
-- Ma 网络中，所有 DRother 路由器均只与DR和BDR建立邻接关系， DRother 间不建立邻接关系。
-- 如此一来，Ma 网络中OSPF需要维护的邻居关系大幅减少：$M = (n - 2) \times 2 + 1$
-- LSA 泛洪问题得到缓解
-
-##### 6.12.14 LSA 泛洪
-
-![image-20220526211229671](NetworkEngineerSummer.assets/image-20220526211229671.png)
-
-- 路由器R3用224.0.0.6通知DR及BDR，DR、BDR监听224.0.0.6这一组播地址
-- DR向组播地址224.0.0.5发送更新以通知其他路由器，所有的OSPF路由器监听224.0.0.5
-- 路由器收到链路变化后的LSU后，更新自己的LSDB，进行SPF重新计算，更新路由表
-
-##### 6.12.15 OSPF 区域
-
-![image-20220526211400742](NetworkEngineerSummer.assets/image-20220526211400742.png)
-
-单区域存在的问题
-
-- LSA泛洪严重，OSPF路由器的负担很大
-- 区域内部动荡会引起全网路由器的SPF计算
-- LSDB庞大，资源消耗过多，设备性能下降，影响数据转发
-- 每台路由器都需要维护的路由表越来越大，单区域内路由无法汇总
-
-![image-20220526211411249](NetworkEngineerSummer.assets/image-20220526211411249.png)
-
-多区域获得的改进
-
-- 减少了LSA洪泛范围，有效把拓扑变化控制在区域内，达到网络优化的目的
-- 在区域边界可以做路由汇总，减小了路由表
-- 充分利用OSPF特殊区域的扩展性，进一步减少LSA泛洪，从而优化路由
-- 多区域提高了网络的扩展性，有利于组建大规模网络
-
-
-
-- 所有非骨干区域必须与骨干区域直连。
-
-  ![image-20220526211515115](NetworkEngineerSummer.assets/image-20220526211515115.png)
-
-##### 6.12.16 OSPF 路由器角色
-
-![image-20220526211548864](NetworkEngineerSummer.assets/image-20220526211548864.png)
-
-##### 6.12.17 OSPF 的基本配置
-
-- 创建 OSPF 进程，并指定 OSPF 进程号以及 RouterID
-
-  `[Router] ospf [process-id|router-id router-id]`
-
-
-
-- 在 area0 中宣告指定端口
-
-```
-[Router] area area-id
-[Router] network ip-address wildcard-mask
-```
-
-
-
-- 通配符掩码 wildcard-mask
-  通配符是一个用于决定哪些IP地址该精确匹配（0代表匹配）哪些地址位被忽略的32位数值。通常用于访问控制列表（ACL）、OSPF路由协议通告。
-
-![image-20220526215644017](NetworkEngineerSummer.assets/image-20220526215644017.png)
-
-![image-20220526215704932](NetworkEngineerSummer.assets/image-20220526215704932.png)
-
-```
-ospf 1 router-id 2.2.2.2
- area 0
-  network 176.16.1.0 0.0.0.255
-```
-
-![image-20220526215829854](NetworkEngineerSummer.assets/image-20220526215829854.png)
-
-
-
-**单区域OSPF 配置实例**
-
-![image-20220526215932140](NetworkEngineerSummer.assets/image-20220526215932140.png)
-
-**多区域OSPF 配置实例**
-
-![image-20220526215957678](NetworkEngineerSummer.assets/image-20220526215957678.png)
-
-- R2（ASR） 配置如下
-
-```
-[R2] ospf 1 router-id 2.2.2.2[R2-ospf-1] area 0
-[R2-ospf-1-area-0.0.0.0] network 192.168.12.0 0.0.0.255
-[R2-ospf-1] area 1
-[R2-ospf-1-area-0.0.0.1] network 192.168.23.0 0.0.0.255
-```
-
-
-
-**OSPF 查看与验证**
-
-```
-display ospf biref # 查看OSPF协议相关运行参数
-display ospf peer # 查看OSPF 邻居表
-display ospf lsdb # 查看LSDB表
-display ospf routing # 查看OSPF路由
-```
-
-​	
-
-**修改OSPF cost**
-
-![image-20220526220244322](NetworkEngineerSummer.assets/image-20220526220244322.png)
-
-**修改OSPF DR 优先级**
-
-![image-20220526220236609](NetworkEngineerSummer.assets/image-20220526220236609.png)
-
-
-
 #### 6.25 二层交换机
-
-![image-20220526221137696](NetworkEngineerSummer.assets/image-20220526221137696.png)
-
-##### 6.25.1 主要功能
-
-- 维护MAC地址表，MAC寻址
-
-- 数据帧的转发及过滤
-
-- 二层环路避免及冗余性支持
-
-  ![image-20220526221224638](NetworkEngineerSummer.assets/image-20220526221224638.png)
-
-##### 6.25.2 MAC地址表
-
-![image-20220526221727745](NetworkEngineerSummer.assets/image-20220526221727745.png)
-
-##### 6.25.3 交换机寻址过程
-
- ![image-20220526221758000](NetworkEngineerSummer.assets/image-20220526221758000.png)
-
-![image-20220526221805195](NetworkEngineerSummer.assets/image-20220526221805195.png)
-
-![image-20220526221811725](NetworkEngineerSummer.assets/image-20220526221811725.png)
-
-![image-20220526221817327](NetworkEngineerSummer.assets/image-20220526221817327.png)
-
-![image-20220526221823177](NetworkEngineerSummer.assets/image-20220526221823177.png)
-
-![image-20220526221828314](NetworkEngineerSummer.assets/image-20220526221828314.png)
-
-![image-20220526221833127](NetworkEngineerSummer.assets/image-20220526221833127.png)
-
-![image-20220526221839517](NetworkEngineerSummer.assets/image-20220526221839517.png)
-
-#### 6.26 VLAN
-
-##### 6.26.1 为什么需要 VLAN
-
-![image-20220526221923645](NetworkEngineerSummer.assets/image-20220526221923645.png)
-
-- 整台交换机所有端口均属于同一广播域
-- 网络中的设备可能被大量的广播损耗资源
-- 无法根据业务需求灵活规划网络结构
-
-
-
-
-
-![image-20220526221950018](NetworkEngineerSummer.assets/image-20220526221950018.png)
-
-- VLAN（Virtual LAN）可以解决上述问题
-- 通过将交换机端口加入特定VLAN，可以起到隔离广播的作用。
-
-
-
-![image-20220526222041769](NetworkEngineerSummer.assets/image-20220526222041769.png)
-
-- 不同VLAN是不同广播域、不同网段
-- 可根据业务需求灵活进行VLAN规划
-- 不同的VLAN间无法进行二层互访
-
-##### 6.26.2 VLAN 知识小结
-
-- 一个VLAN中所有设备处于同一广播域内，不同的VLAN为不同的广播域，一个VLAN一般是一个IP网段，不同的VLAN规划到不同的IP网段；
-- 不同的VLAN之间二层隔离，广播不能跨越VLAN传播，因此不同VLAN之间的设备无法进行二层通信，需通过三层设备实现互通;
-- VLAN中成员关系多基于交换机的接口进行静态地分配，划分VLAN就是将交换机的接口添加到特定VLAN；
-- VLAN工作于OSI参考模型的第二层，是二层交换机的一个非常根本的工作机制。
-
-##### 6.26.3 VLAN 成员模式
-
-![image-20220526222216475](NetworkEngineerSummer.assets/image-20220526222216475.png)
-
-- 静态VLAN：以手工的方式将接口加入特定的VLAN;
-- 动态VLAN：根据接入到交换机的客户端的MAC地址等信息，动态地将交换机的接口添加到特定的VLAN。
-
-##### 6.26.4 VLAN 端口分类
-
-- Access 端口：一般用于连接主机的端口，Access 端口只能属于一个VLAN
-- Trunk 端口：一般用于交换机之间连接的端口，trunk端口可以属于多个VLAN，可以接收和发送多个VLAN报文。
-- Hybrid 端口：可以用于交换机之间连接，也可以用于接用户的计算机
-  Hybrid 端口可以属于多个VLAN，可以接收和发送多个 VLAN 的报文。
-
-##### 6.26.5 Access 接口
-
-![image-20220526222407727](NetworkEngineerSummer.assets/image-20220526222407727.png)
-
-##### 6.26.6 Trunk 接口
-
-![image-20220526222424157](NetworkEngineerSummer.assets/image-20220526222424157.png)
-
-- 当一条链路，需要承载多个VLAN信息的时候，需要使用trunk来实现
-- Trunk 两端交换机需采用相同的干道协议
-- 一般用于交换机之间或交换机与路由器直连互联
-
-##### 6.26.7 802.1Q
-
-![image-20220526222501175](NetworkEngineerSummer.assets/image-20220526222501175.png)
-
-##### 6.26.8 端口的缺省ID（PVID）
-
-- 每个Access、Trunk、Hybrid、QinQ 类型的端口都可以配置一个缺省VLAN（PVID：PortDefault VLAN ID），表示端口所属的VLAN。
-- 对于 Access 类型端口，PVID的数值表示当前端口所属VLAN。
-- 对于 Trunk、Hybrid 类型端口，由于 Hybrid 类型端口和 Trunk 类型端口允许多个 VLAN 数据帧通过，也可以理解为这两种类型端口属于多个VLAN，所以需要配置PVID。
-- PVID，缺省情况下为VLAN1。
-
-
-
-##### 6.26.9 VLAN 基本配置
-
-- 在交换机上创建VLAN，并进入VLAN视图
-
-  `[Quidway] vlan 10 | vlan batch 10 20 30`
-
-- （可选）在特定VLAN视图下修改VLAN的名字
-
-  `[Quidway-vlan10] name TechVLAN`
-
-- 为特定的vlan添加接口
-
-  `[Quidway-vlan10] port GigabitEthernetO/0/1`
-
-- 将特定的接口配置为access类型，并加入vlan
-
-  ```
-  [Quidway] interface gigabitEthernet0/0/1
-  [Quidway-gigabitEthernet0/0/1] port link-type access
-  [Quidway-gigabitEthernet0/0/1] port default vlan 10
-  ```
-
-##### 6.26.10 VLAN 实验
-
-```
-[sw1] vlan batch 10 20 # 批量创建 VLAN 10 20
-
-# 将 GE0/0/1 配置为 access 类型，并加入 VLAN 10
-[sw1]int g0/0/1
-[sw1-GigabitEthernet0/0/1]port link-type access
-[sw1-GigabitEthernet0/0/1]port default vlan 10
-
-# 将 GE0/0/2 配置为 access 类型，并加入 VLAN 20
-[sw1-GigabitEthernet0/0/1]int g0/0/2
-[sw1-GigabitEthernet0/0/2]port link-type access
-[sw1-GigabitEthernet0/0/2]port default vlan 20
-
-# 将特定接口配置为 trunk 类型
-[sw2-GigabitEthernet0/0/2]int g0/0/24
-[sw2-GigabitEthernet0/0/24]port link-type trunk
-# 在 接口中放行特定 VLAN
-[sw2-GigabitEthernet0/0/24]port trunk allow-pass vlan 10 20 99
-
-# 配置 trunk 接口的 pvid，这个 VLAN 的流量从 trunk 接口转发不会打标签，默认是 vlan 1
-[sw2-GigabitEthernet0/0/24]port trunk pvid vlan 99
-```
-
-##### 6.26.11 二层端口类型分析
-
-- Access接口收到帧，如果该帧不带tag，则接受帧并打上端口vid
-- 交换机将帧从相应VLAN接口转发出去，删除Tag。
-- 如果该接口为trunk，查看allow-pass vlan，如果存在直接转发出去
-
-###### 6.26.11.1 Access 接口
-
-![image-20220526223448029](NetworkEngineerSummer.assets/image-20220526223448029.png)
-
-
-
-
-
-**思考：PC1是否能与PC2、PC3 通信**
-
-![image-20220526223602401](NetworkEngineerSummer.assets/image-20220526223602401.png)
-
-- 如果该帧携带tag，则当vlanID与PVID相同时，接收该报文，否则丢弃。
-
-![image-20220526223530904](NetworkEngineerSummer.assets/image-20220526223530904.png)
-
-###### 6.26.11.2 Trunk 接口
-
-- Trunk接口收到帧，如果不带Tag，打上接口PVID，查看allow-pass vlan，允许则通过，否则丢弃。
-- Trunk接口收到帧，如果带Tag，查看allow-pass vlan，允许则通过，否则丢弃。
-
-![image-20220526223745128](NetworkEngineerSummer.assets/image-20220526223745128.png)
-
-- Trunk接口发送帧，若vlanID与接口pvid相同，且该vlan在allow-pass vlan列表中，则去掉Tag，发送数据帧。
-- Trunk接口发送帧，若vlanID与接口pvid不同，且该vlan在allow-pass vlan列表中，直接发送数据帧。
-
-![image-20220526223849364](NetworkEngineerSummer.assets/image-20220526223849364.png)
-
-###### 6.26.11.3 Hybrid 接口
-
-- Hybrid接口收到帧，若数据帧带tag，且vlanID在 allow-pass vlan列表里面，则接受该报文，否则丢弃。
-
-![image-20220526223929994](NetworkEngineerSummer.assets/image-20220526223929994.png)
-
-- Hybrid接口发送帧，当vlanID是接口允许通过的vlanID时，发送该帧。可以通过命令设置发送时是否携带Tag。
-
-![image-20220526223950369](NetworkEngineerSummer.assets/image-20220526223950369.png)
-
-#### 6.26.12 VLAN间路由互通
-
-VLAN能隔离广播域。通常两个广播域之间由路由器连接，广播域之间来往的数据包都是通过路由器中继的。因此，VLAN间的通信需要路由器提供中继服务，这被称为：==VLAN间路由==。
-
-![image-20220526224049897](NetworkEngineerSummer.assets/image-20220526224049897.png)
-
-###### 6.26.12.1 通过物理接口实现 VLAN 间通信
-
-- VLAN 能内部节点的通信是二层通信，而不同 VLAN 之间的节点通信则是三层通信，需要借助三层设备，如**路由器/三层交换机/防火墙**。
-
-![image-20220526224143196](NetworkEngineerSummer.assets/image-20220526224143196.png)
-
-###### 6.26.12.2 通过子接口实现 VLAN 间通信
-
-- 在路由器以太网接口上进行“子接口”的划分，与交换机的Trunk链路对接。
-- 子接口是逻辑接口，可以配置IP地址，需要指定vlan-id（物理接口UP )
-
-![image-20220526224222740](NetworkEngineerSummer.assets/image-20220526224222740.png)
-
-![image-20220526224252485](NetworkEngineerSummer.assets/image-20220526224252485.png)
-
-#### 6.26.13 VLAN interface
-
-![image-20220526224316496](NetworkEngineerSummer.assets/image-20220526224316496.png)
-
-#### 6.26.14 三层交换机
-
-![image-20220526224356324](NetworkEngineerSummer.assets/image-20220526224356324.png)
-
-**二三层交换机、路由器简单组网**
-
-![image-20220526224446805](NetworkEngineerSummer.assets/image-20220526224446805.png).
-
-![image-20220526224452366](NetworkEngineerSummer.assets/image-20220526224452366.png)
-
-
 
 ### 七、下一代互联网 IPv6
 
